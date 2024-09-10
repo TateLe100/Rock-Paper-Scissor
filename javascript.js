@@ -123,9 +123,9 @@ function playRound(humanChoice, computerChoice) {
 // console.log(humanSelection, computerSelection);
 // console.log(playRound(humanSelection, computerSelection));
 function playGame(numOfGames) {
-  const humanSelection = getHumanChoice();
-  const computerSelection = getComputerChoice();
   for (let i = 1; i <= numOfGames; i++) {
+    const humanSelection = getHumanChoice();
+    const computerSelection = getComputerChoice();
     console.log(playRound(humanSelection, computerSelection));
   }
 }
