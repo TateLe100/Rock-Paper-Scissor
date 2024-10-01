@@ -2,8 +2,48 @@
 let humanScore = 0;
 let computerScore = 0;
 
+// event listeners for each button
+const userRock = document.querySelector("#rock");
+const userPaper = document.querySelector("#paper");
+const userScissor = document.querySelector("#scissor");
+
+// add a reset button
+const resetBtn = document.querySelector("#reset");
+
+// grab the results div
+const results = document.querySelector(".results");
+
+// creating a function to handle user choice better
+function handleUserChoice(userChoice) {
+  const computerSelection = getComputerChoice();
+  results.textContent = playRound(userChoice, computerSelection);
+  checkScores();
+}
+
+userRock.addEventListener("click", () => handleUserChoice("rock"));
+userPaper.addEventListener("click", () => handleUserChoice("paper"));
+userScissor.addEventListener("click", () => handleUserChoice("scissors"));
+
+// creating a function to check scores
+function checkScores() {
+  if (humanScore === 5) {
+    results.textContent = "YOU WIN";
+    disableButtons();
+  } else if (computerScore === 5) {
+    results.textContent = "YOU LOSE";
+    disableButtons();
+  }
+}
+
+// creating a function to disable buttons
+function disableButtons() {
+  userRock.disabled = true;
+  userPaper.disabled = true;
+  userScissor.disabled = true;
+}
+
 function getComputerChoice() {
-  // randomly return string "rock" "paper" "sissor"
+  // randomly return string "rock" "paper" "scissor"
   let randomNumber = Math.floor(Math.random() * 3) + 1;
   if (randomNumber === 1) {
     return "rock";
@@ -14,121 +54,30 @@ function getComputerChoice() {
   }
 }
 
-function getHumanChoice() {
-  let userInput = prompt("Rock, Paper, Or Scissors? ").toLowerCase();
-
-  // validation
-  while (
-    userInput === null ||
-    (userInput !== "rock" && userInput !== "paper" && userInput !== "scissors")
-  ) {
-    userInput = prompt(
-      "Invalid choice. Please enter Rock, Paper, or Scissors:"
-    ).toLowerCase();
-  }
-  return userInput;
-}
-
 function playRound(humanChoice, computerChoice) {
-  if (humanChoice == computerChoice) {
+  if (
+    (humanChoice == "rock" && computerChoice == "scissors") ||
+    (humanChoice == "paper" && computerChoice == "rock") ||
+    (humanChoice == "scissors" && computerChoice == "paper")
+  ) {
+    humanScore++;
+  } else if (humanChoice == computerChoice) {
     humanScore++;
     computerScore++;
-    return (
-      "ITS a TIE" +
-      "\n" +
-      "Human Score:" +
-      humanScore +
-      "\n" +
-      "Computer Score:" +
-      computerScore
-    );
+  } else {
+    computerScore++;
   }
-  if (humanChoice == "rock") {
-    if (computerChoice == "scissors") {
-      humanScore++;
-      return (
-        "Human Win" +
-        "\n" +
-        "Human Score:" +
-        humanScore +
-        "\n" +
-        "Computer Score:" +
-        computerScore
-      );
-    } else {
-      computerScore++;
-      return (
-        "Computer Win" +
-        "\n" +
-        "Human Score:" +
-        humanScore +
-        "\n" +
-        "Computer Score:" +
-        computerScore
-      );
-    }
-  }
-  if (humanChoice == "scissors") {
-    if (computerChoice == "paper") {
-      humanScore++;
-      return (
-        "Human Win" +
-        "\n" +
-        "Human Score:" +
-        humanScore +
-        "\n" +
-        "Computer Score:" +
-        computerScore
-      );
-    } else {
-      computerScore++;
-      return (
-        "Computer Win" +
-        "\n" +
-        "Human Score:" +
-        humanScore +
-        "\n" +
-        "Computer Score:" +
-        computerScore
-      );
-    }
-  }
-  if (humanChoice == "paper") {
-    if (computerChoice == "rock") {
-      humanScore++;
-      return (
-        "Human Win" +
-        "\n" +
-        "Human Score:" +
-        humanScore +
-        "\n" +
-        "Computer Score:" +
-        computerScore
-      );
-    } else {
-      computerScore++;
-      return (
-        "Computer Win" +
-        "\n" +
-        "Human Score:" +
-        humanScore +
-        "\n" +
-        "Computer Score:" +
-        computerScore
-      );
-    }
-  }
+  return "Human: " + humanScore + " - " + " Computer: " + computerScore;
 }
 
-// console.log(humanSelection, computerSelection);
-// console.log(playRound(humanSelection, computerSelection));
-function playGame(numOfGames) {
-  for (let i = 1; i <= numOfGames; i++) {
-    const humanSelection = getHumanChoice();
-    const computerSelection = getComputerChoice();
-    console.log(playRound(humanSelection, computerSelection));
-  }
+// creating a reset function
+function reset() {
+  humanScore = 0;
+  computerScore = 0;
+  userRock.disabled = false;
+  userPaper.disabled = false;
+  userScissor.disabled = false;
+  results.textContent = "Rock, Paper, or Scissors?";
 }
 
-let numOfGames = parseInt(prompt("How many games would you like to play? "));
-playGame(numOfGames);
+resetBtn.addEventListener("click", () => reset());
